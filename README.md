@@ -1,7 +1,7 @@
 Adding coding rules 
 =======
 
-## There are three ways to add coding rules to SonarQube: 
+## There are three ways to add coding rules to SonarQube:
 
 - Writing a SonarQube plugin in Java that uses SonarQube APIs to add new rules 
 
@@ -11,7 +11,7 @@ Adding coding rules
 
 ## Adding coding rules using Java 
 
-**Writing coding rules in Java is a six-step process:**
+*Writing coding rules in Java is a six-step process:*
 
 1- Create a SonarQube plugin. 
 
@@ -41,8 +41,7 @@ Note: Custom rules written in Java will run in SonarLint if SonarLint compatibil
 
 for the syntax. 
 
-### SonarQube Java Custom Rules Plugin Template
-
+# SonarQube Java Custom Rules Plugin Template 
 
 This example demonstrates how to write **Custom Rules** for SonarJava.
 
@@ -54,5 +53,5 @@ mvn clean install -f pom_SQ_10_6_LTS.xml
 
 For more details about how to write custom rules, please refer to this tutorial, [Writing Custom Java Rules 101](./CUSTOM_RULES_101.md).
 
-## Note:
+### Note:
 The [Custom Java Rules 101](./CUSTOM_RULES_101.md) is updated version for the official tutorial, [Writing Custom Java Rules 101](https://github.com/SonarSource/sonar-java/blob/master/docs/CUSTOM_RULES_101.md)
