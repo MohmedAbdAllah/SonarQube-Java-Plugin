@@ -27,4 +27,15 @@ class MyJavaFileCheckRegistrarTest {
 
   }
 
+  @Test
+  void checkNumberRules() {
+    CheckRegistrar.RegistrarContext context = new CheckRegistrar.RegistrarContext();
+
+    MyJavaFileCheckRegistrar registrar = new MyJavaFileCheckRegistrar();
+    registrar.register(context);
+
+    assertThat(context.checkClasses()).hasSize(1);
+    assertThat(context.testCheckClasses()).isEmpty();
+  }
+
 }

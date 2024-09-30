@@ -35,7 +35,7 @@ It will cover all the main concepts of static analysis required to understand an
 The rules you develop will be delivered using a dedicated, custom plugin, relying on the **SonarSource Analyzer for Java API**. 
 In order to start working efficiently, we provide a template Maven project that you will fill in while following this tutorial.
 
-Grab the template project by cloning [this repository](https://github.com/SonarSource/sonar-java) and then importing in your IDE the sub-module [java-custom-rules-examples](https://github.com/SonarSource/sonar-java/tree/master/docs/java-custom-rules-example).
+Grab the template project by cloning [this repository](https://github.com/MohmedAbdAllah/SonarQube-Java-Plugin).
 This project already contains examples of custom rules. Our goal will be to add an extra rule!
 
 ### Looking at the POM
@@ -45,19 +45,19 @@ The root of a Maven project is a file named `pom.xml`.
 
 In our case, we have two of them:
 * `pom.xml`: use a snapshot version of the Java Analyzer
-* `pom_SQ_9_9_LTS.xml`: self-contained `pom` file, configured with dependencies matching SonarQube `9.9 LTS` requirements
+* `pom_SQ_10_6_LTS.xml`: self-contained `pom` file, configured with dependencies matching SonarQube `10.6 LTS` requirements
 
 These two `pom`s correspond to different use cases, depending on which instance of SonarQube you will target with your custom-rules plugin. 
 
-In this tutorial, **we will only use the file named `pom_SQ_9_9_LTS.xml`**, as it is entirely independent of the build of the Java Analyzer, is self-contained, and will target the latest release of SonarQube.
+In this tutorial, **we will only use the file named `pom_SQ_10_6_LTS.xml`**, as it is entirely independent of the build of the Java Analyzer, is self-contained, and will target the latest release of SonarQube.
 
 Let's start by building the custom-plugin template by using the following command:
 
 ```
-mvn clean install -f pom_SQ_9_9_LTS.xml
+mvn clean install -f pom_SQ_10_6_LTS.xml
 ```
 
-Note that you can also decide to **delete** the original `pom.xml` file (**NOT RECOMMENDED**) and then rename `pom_SQ_9_9_LTS.xml` into `pom.xml`. 
+Note that you can also decide to **delete** the original `pom.xml` file (**NOT RECOMMENDED**) and then rename `pom_SQ_10_6_LTS.xml` into `pom.xml`. 
 In this case, you would be able to use the very simple command:
 
 ```
@@ -66,13 +66,13 @@ mvn clean install
 
 Looking inside the `pom`, you will see that both SonarQube and the Java Analyzer versions are hard-coded. 
 This is because SonarSource's analyzers are directly embedded in the various SonarQube versions and are shipped together. 
-For instance, SonarQube `8.9` (previous LTS) is shipped with version `6.15.1.26025` of the Java Analyzer, while SonarQube `9.9` (LTS) is shipped with a much more recent version `7.16.0.30901` of the Java Analyzer. 
+For instance, SonarQube `9.9` (previous LTS) is shipped with version `7.16.0.30901` of the Java Analyzer, while SonarQube `10.6` (LTS) is shipped with a much more recent version `7.32.0.35531` of the Java Analyzer. 
 **These versions can not be changed**.
 
 ```xml
 <properties>
-  <sonar.plugin.api.version>9.14.0.375</sonar.plugin.api.version>
-  <sonarjava.version>7.16.0.30901</sonarjava.version>
+  <sonar.plugin.api.version>10.7.0.2191</sonar.plugin.api.version>
+  <sonarjava.version>7.32.0.35531</sonarjava.version>
   <!-- [...] -->
 </properties>
 ```
@@ -97,14 +97,13 @@ Starting with sonar-java 7.30, you must also include the `requiredForLanguages` 
 <plugin>
   <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
   <artifactId>sonar-packaging-maven-plugin</artifactId>
-  <version>1.21.0.505</version>
   <extensions>true</extensions>
   <configuration>
     <pluginKey>java-custom</pluginKey>
     <pluginName>Java Custom Rules</pluginName>
     <pluginClass>org.sonar.samples.java.MyJavaRulesPlugin</pluginClass>
     <sonarLintSupported>true</sonarLintSupported>
-    <pluginApiMinVersion>9.14.0.375</pluginApiMinVersion>
+    <pluginApiMinVersion>7.32.0.35531</pluginApiMinVersion>
     <requirePlugins>java:${sonarjava.version}</requirePlugins>
     <requiredForLanguages>java</requiredForLanguages>
   </configuration>
@@ -566,7 +565,7 @@ public class MyJavaFileCheckRegistrar implements CheckRegistrar {
 ```
 
 Now, because we added a new rule, we also need to update our tests to make sure it is taken into account. 
-To do so, navigate to its corresponding test class, named `MyJavaFileCheckRegistrarTest`, and update the expected number of rules from 8 to 9.
+To do so, navigate to its corresponding test class, named `MyJavaFileCheckRegistrarTest`, and update the expected number of rules from 1 to 2.
 
 ```java
 
@@ -579,7 +578,7 @@ class MyJavaFileCheckRegistrarTest {
     MyJavaFileCheckRegistrar registrar = new MyJavaFileCheckRegistrar();
     registrar.register(context);
 
-    assertThat(context.checkClasses()).hasSize(8); // change it to 9, we added a new one!
+    assertThat(context.checkClasses()).hasSize(1); // change it to 2, we added a new one!
     assertThat(context.testCheckClasses()).isEmpty();
   }
 }
@@ -614,14 +613,14 @@ public class MyJavaRulesDefinition implements RulesDefinition {
 At this point, we've completed the implementation of the first custom rule and registered it into the custom plugin. 
 The last remaining step is to test it directly with the SonarQube platform and try to analyze a project!
 
-Start by building the project using Maven. Note that here we are using the self-contained `pom` file targeting SonarQube `9.9` LTS. 
-If you renamed it into `pom.xml`, remove the `-f pom_SQ_9_9_LTS.xml` part of the following command):
+Start by building the project using Maven. Note that here we are using the self-contained `pom` file targeting SonarQube `10.6` LTS. 
+If you renamed it into `pom.xml`, remove the `-f pom_SQ_10_6_LTS.xml` part of the following command):
 
 ```
 $ pwd
 /home/gandalf/workspace/sonar-java/docs/java-custom-rules-example
   
-$ mvn clean install -f pom_SQ_9_9_LTS.xml
+$ mvn clean install -f pom_SQ_10_6_LTS.xml
 [INFO] Scanning for projects...
 [INFO]                                                                        
 [INFO] ------------------------------------------------------------------------
@@ -645,10 +644,10 @@ Then, grab the jar file `java-custom-rules-example-1.0.0-SNAPSHOT.jar` from the 
 >
 > Before going further, be sure to have the adequate version of the SonarQube Java Analyzer with your SonarQube instance. 
 > The dependency over the Java Analyzer of our custom plugin is defined in its `pom`, as seen in the first chapter of this tutorial. 
-> We consequently provide two distinct `pom` files mapping both the `8.9` previous LTS version of SonarQube, as well as the latest LTS release, version `9.9`.
+> We consequently provide two distinct `pom` files mapping both the `9.9` previous LTS version of SonarQube, as well as the latest LTS release, version `10.6`.
 >
-> * If you are using a SonarQube `9.9` and updated to the latest LTS already, then you won't have the possibility to update the Java Analyzer independently anymore. 
-> * Consequently, use the file `pom_SQ_9_9_LTS.xml` to build the project.
+> * If you are using a SonarQube `10.6` and updated to the latest LTS already, then you won't have the possibility to update the Java Analyzer independently anymore. 
+> * Consequently, use the file `pom_SQ_10_6_LTS.xml` to build the project.
 >
 
 Now, (re-)start your SonarQube instance, log in as admin, and navigate to the ***Rules*** tab.
@@ -675,7 +674,7 @@ Check this example: [SecurityAnnotationMandatoryRule.java](https://github.com/So
 In the `pom.xml`, define in the `Maven Dependency Plugin` part all the JARs you need to run your Unit Tests. 
 For example, if your sample code used in your Unit Tests is having a dependency on Spring, add it there.
 
-See: [pom.xml#L137-L197](./java-custom-rules-example/pom_SQ_9_9_LTS.xml#L137-L197)
+See: [pom.xml#L137-L197](./pom_SQ_10_6_LTS.xml#L137-L197)
 
 ### How to test precise issue location
 
@@ -727,3 +726,4 @@ public interface JavaFileScannerContext {
 * [SonarQube Platform](http://www.sonarqube.org/)
 * [SonarSource Code Quality and Security for Java Github Repository](https://github.com/SonarSource/sonar-java)
 * [SonarQube Java Custom-Rules Example](https://github.com/SonarSource/sonar-java/tree/7.16.0.30901/docs/java-custom-rules-example)
+* [sonar-custom-rules-example](https://github.com/SonarSource/sonar-custom-rules-examples)
