@@ -27,15 +27,15 @@ Adding coding rules
 
 See the following pages to see samples and details about how to create coding rules 
 
-- for [COBOL](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/cobol/)
+- [for COBOL](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/cobol/)
 
-- for [Java](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/java/)
+- [for Java](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/java/)
 
-- for [PHP](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/php/)
+- [for PHP](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/php/)
 
-- for [Python](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/python/)
+- [for Python](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/python/)
 
-- for [RPG](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/rpg/)
+- [for RPG](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/rpg/)
 
 Note: Custom rules written in Java will run in SonarLint if SonarLint compatibility is properly notated in the custom plugin manifest, see [this example](https://github.com/MohmedAbdAllah/SonarQube-Java-Plugin/blob/main/pom.xml#L85) 
 
